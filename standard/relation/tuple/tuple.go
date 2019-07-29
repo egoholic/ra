@@ -5,5 +5,5 @@ import (
 )
 
 type Tuple struct {
-	values []*val.V
+	Values map[string]*val.V
 }

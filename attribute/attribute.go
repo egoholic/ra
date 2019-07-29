@@ -43,7 +43,7 @@ func NewAttribute(name string, typ []byte, constraints []Constraint) *Attr {
 func (a *Attr) Check(v *val.V) (ok bool, messages []string) {
 	var msg string
 	ok = false
-	if len(a.typ) != len(v.Typ) {
+	if a.MatchType(v.Typ) {
 		msg = fmt.Sprintf("wrong type\n\tEXPECTED: %s\n\tGOT: %s", string(a.typ), string(v.Typ))
 		messages = append(messages, msg)
 		return
