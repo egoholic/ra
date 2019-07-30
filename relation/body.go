@@ -14,10 +14,18 @@ type Body struct {
 	added  []*tuple.Tuple
 }
 
+type BodyIterator struct {
+	body Body
+}
+
 func NewBody(source Source) *Body {
 	return &Body{source, nil, nil}
 }
 
 func (b *Body) Add(t *tuple.Tuple) {
 	b.added = append(b.added, t)
+}
+
+func (b *Body) MakeIterator() *BodyIterator {
+
 }
