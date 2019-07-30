@@ -1,8 +1,12 @@
 package relation
 
 import (
+	"errors"
+	"fmt"
+
 	attr "github.com/egoholic/ra/attribute"
 	"github.com/egoholic/ra/relation/tuple"
+	"github.com/egoholic/ra/val"
 )
 
 type Header struct {
@@ -10,10 +14,18 @@ type Header struct {
 	PrimaryKey []string
 }
 
-func (h *Header) checkPK(pk []string, attrs map[string]*attr.Attr) bool {
+func NewHeader(pk []string, attrs map[string]*attr.Attr) (header *Header, err error) {
+	ok := checkPK(pk, attrs)
+	if !ok {
+		return nil, errors.New("wrong index")
+	}
+	return &Header{attrs, pk}, nil
+}
+
+func checkPK(pk []string, attrs map[string]*attr.Attr) bool {
 	results := map[string]bool{}
 	for _, pkAttrName := range pk {
-		for attrName, attr := range attrs {
+		for attrName, _ := range attrs {
 			if attrName == pkAttrName {
 				results[pkAttrName] = true
 				continue
@@ -27,21 +39,21 @@ func (h *Header) checkPK(pk []string, attrs map[string]*attr.Attr) bool {
 	return true
 }
 
-// Checks tuple structure to be sure about that it could be added to the relation.
-func (h *Header) checkTuple(tpl *tuple.Tuple) bool {
-	if len(tpl.Values) != len(h.Attributes) {
-		return false
+func (h *Header) MakeTuple(rawValues map[string]interface{}) (tpl *tuple.Tuple, err error) {
+	if len(rawValues) != len(h.Attributes) {
+		return nil, fmt.Errorf("wrong number of attributes\n\texpected: %d\n\tgiven: %d", len(h.Attributes), len(rawValues))
 	}
-
+	values := map[string]*val.V{}
 	for attrName, attr := range h.Attributes {
-		val, ok := tpl.Values[attrName]
+		rawVal, ok := rawValues[attrName]
 		if !ok {
-			return false
+			return nil, fmt.Errorf("attribute `%s` is not found", attrName)
 		}
-		ok, _ = attr.Check(val)
-		if !ok {
-			return false
+		val, err := attr.MakeVal(rawVal)
+		if err != nil {
+			return nil, err
 		}
+		values[attrName] = val
 	}
-	return true
+	return tuple.New(values), nil
 }

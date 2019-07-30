@@ -2,11 +2,22 @@ package relation
 
 import "github.com/egoholic/ra/relation/tuple"
 
-type Body struct {
-	tuples []*tuple.Tuple
+type Source interface {
+	Push(*tuple.Tuple)
+	Pull() []*tuple.Tuple
+	Reset()
 }
 
-func (b *Body) Insert(tpl *tuple.Tuple) (ok bool, messages []string) {
+type Body struct {
+	source Source
+	loaded []*tuple.Tuple
+	added  []*tuple.Tuple
+}
 
-	b.tuples = append(b.tuples, tpl)
+func NewBody(source Source) *Body {
+	return &Body{source, nil, nil}
+}
+
+func (b *Body) Add(t *tuple.Tuple) {
+	b.added = append(b.added, t)
 }
