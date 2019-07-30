@@ -1,6 +1,6 @@
 package relation
 
-import "github.com/egoholic/ra/standard/relation/tuple"
+import "github.com/egoholic/ra/relation/tuple"
 
 type Body struct {
 	tuples []*tuple.Tuple

@@ -2,7 +2,7 @@ package relation
 
 import (
 	attr "github.com/egoholic/ra/attribute"
-	"github.com/egoholic/ra/standard/relation/tuple"
+	"github.com/egoholic/ra/relation/tuple"
 )
 
 type Header struct {
@@ -10,11 +10,11 @@ type Header struct {
 	PrimaryKey []string
 }
 
-func (h *Header) checkPK(pk []string, attrs []*attr.Attr) bool {
+func (h *Header) checkPK(pk []string, attrs map[string]*attr.Attr) bool {
 	results := map[string]bool{}
 	for _, pkAttrName := range pk {
-		for _, attr := range attrs {
-			if attr.Name() == pkAttrName {
+		for attrName, attr := range attrs {
+			if attrName == pkAttrName {
 				results[pkAttrName] = true
 				continue
 			}
