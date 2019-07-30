@@ -3,8 +3,8 @@ package relation
 import "github.com/egoholic/ra/relation/tuple"
 
 type Source interface {
-	Push(*tuple.Tuple)
-	Pull() []*tuple.Tuple
+	Push(*tuple.Tuple) error
+	Pull() ([]*tuple.Tuple, error)
 	Reset()
 }
 
@@ -45,7 +45,11 @@ func (b *Body) Load() error {
 	b.loaded = append(b.loaded, tuples)
 }
 
-func (b *Body) Insert(t *tuple.Tuple) {
+func (b *Body) Insert(t *tuple.Tuple) (err error) {
+	err = b.source.Push(t)
+	if err != nil {
+		return err
+	}
 	b.added = append(b.added, t)
 }
 

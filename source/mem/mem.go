@@ -8,11 +8,12 @@ type MemSource struct {
 	cursor   int
 }
 
-func (s *MemSource) Push(t *tuple.Tuple) {
+func (s *MemSource) Push(t *tuple.Tuple) error {
 	s.tuples = append(s.tuples, t)
+	return nil
 }
 
-func (s *MemSource) Pull() (tuples []*tuple.Tuple) {
+func (s *MemSource) Pull() (tuples []*tuple.Tuple, err error) {
 	limit := s.cursor + s.pageSize
 	for i := s.cursor; i < limit || i < len(s.tuples); i++ {
 		tuples = append(tuples, s.tuples[i])

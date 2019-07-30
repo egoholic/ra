@@ -20,7 +20,7 @@ func (r *Relation) Insert(rawAttrs map[string]interface{}) (tpl *tuple.Tuple, er
 	if err != nil {
 		return nil, err
 	}
-	r.Body.Add(tpl)
+	r.Body.Insert(tpl)
 	return
 }
 
