@@ -5,7 +5,7 @@ import (
 	"fmt"
 
 	attr "github.com/egoholic/ra/attribute"
-	"github.com/egoholic/ra/relation/tuple"
+	"github.com/egoholic/ra/tuple"
 	"github.com/egoholic/ra/val"
 )
 
