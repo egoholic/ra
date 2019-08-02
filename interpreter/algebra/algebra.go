@@ -5,37 +5,31 @@ import (
 )
 
 const (
-	DUMB_OP    = 'D'
 	LET_OP     = 'L'
 	JOIN_OP    = 'J'
 	PROJECT_OP = 'P'
 	UNION_OP   = 'U'
 	SUB_OP     = 'S'
+	GROUP_OP   = 'G'
 )
 
 type Expr struct {
 	Operation int
 	Left      *Expr
 	Right     *Expr
-	Param     interface{}
+	Param1    interface{}
+	Param2    interface{}
 }
 
 type Pattern struct{}
 
-func DUMB() *Expr {
-	return &Expr{
-		Operation: DUMB_OP,
-		Left:      nil,
-		Right:     nil,
-		Param:     nil,
-	}
-}
 func LET(name string, r *Expr) *Expr {
 	return &Expr{
 		Operation: LET_OP,
 		Left:      nil,
 		Right:     r,
-		Param:     name,
+		Param1:    name,
+		Param2:    nil,
 	}
 }
 func JOIN(match func(*tuple.Tuple, *tuple.Tuple) bool, r1, r2 *Expr) *Expr {
@@ -43,7 +37,8 @@ func JOIN(match func(*tuple.Tuple, *tuple.Tuple) bool, r1, r2 *Expr) *Expr {
 		Operation: JOIN_OP,
 		Left:      r1,
 		Right:     r2,
-		Param:     match,
+		Param1:    match,
+		Param2:    nil,
 	}
 }
 func PROJECT(transformers map[string]func(interface{}) interface{}, r *Expr) *Expr {
@@ -51,7 +46,8 @@ func PROJECT(transformers map[string]func(interface{}) interface{}, r *Expr) *Ex
 		Operation: PROJECT_OP,
 		Left:      nil,
 		Right:     r,
-		Param:     transformers,
+		Param1:    transformers,
+		Param2:    nil,
 	}
 }
 func UNION(r1, r2 *Expr) *Expr {
@@ -59,7 +55,8 @@ func UNION(r1, r2 *Expr) *Expr {
 		Operation: UNION_OP,
 		Left:      r1,
 		Right:     r2,
-		Param:     nil,
+		Param1:    nil,
+		Param2:    nil,
 	}
 }
 func SUB(match func(*tuple.Tuple) bool, r *Expr) *Expr {
@@ -67,6 +64,17 @@ func SUB(match func(*tuple.Tuple) bool, r *Expr) *Expr {
 		Operation: SUB_OP,
 		Left:      nil,
 		Right:     r,
-		Param:     match,
+		Param1:    match,
+		Param2:    nil,
+	}
+}
+
+func GROUP(attrNames []string, aggregators map[string]func(*tuple.Tuple) interface{}, r *Expr) *Expr {
+	return &Expr{
+		Operation: GROUP_OP,
+		Left:      nil,
+		Right:     nil,
+		Param1:    attrNames,
+		Param2:    aggregators,
 	}
 }

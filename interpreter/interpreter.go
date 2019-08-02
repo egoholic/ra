@@ -17,9 +17,9 @@ func (i *Interpreter) Exec(*algebra.Expr) {
 
 }
 
-func execDUMB()    {}
 func execLET()     {}
 func execJOIN()    {}
 func execPROJECT() {}
 func execUNION()   {}
 func execSUB()     {}
+func execGROUP()   {}
