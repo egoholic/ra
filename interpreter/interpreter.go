@@ -1,7 +1,7 @@
 package interpreter
 
 import (
-	"github.com/egoholic/ra/relation"
+	"github.com/egoholic/ra/interpreter/algebra"
 	"github.com/egoholic/ra/space"
 )
 
@@ -13,4 +13,13 @@ func New(s *space.Space) *Interpreter {
 	return &Interpreter{s}
 }
 
-type RelationGetter func() *relation.Relation
+func (i *Interpreter) Exec(*algebra.Expr) {
+
+}
+
+func execDUMB()    {}
+func execLET()     {}
+func execJOIN()    {}
+func execPROJECT() {}
+func execUNION()   {}
+func execSUB()     {}
